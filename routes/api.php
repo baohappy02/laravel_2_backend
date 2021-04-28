@@ -19,9 +19,13 @@ use App\Http\Controllers\API\UserController;
 |
 */
   
-Route::post('register', [RegisterController::class, 'register']);
-Route::post('login', [RegisterController::class, 'login']);
+Route::post('/register', [RegisterController::class, 'register']);
+Route::post('/login', [RegisterController::class, 'login']);
      
 Route::middleware('auth:api')->group( function () {
     Route::resource('users', UserController::class);
 });
+
+// Route::get('/user/{id}', function ($id) {
+//     //
+// })->where('id', '[0-9]+');

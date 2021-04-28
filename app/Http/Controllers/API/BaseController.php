@@ -17,7 +17,7 @@ class BaseController extends Controller
     public function sendResponse($result, $message)
     {
     	$response = [
-            'code' => 1,
+            'code' => config('constants.true'),
             'data'    => $result,
             'message' => $message,
         ];
@@ -35,7 +35,7 @@ class BaseController extends Controller
     public function sendError($error, $errorMessages = [], $state = 404)
     {
     	$response = [
-            'code' => 0,
+            'code' => config('constants.false'),
             'message' => $error,
         ];
 
