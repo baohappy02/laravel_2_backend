@@ -19,8 +19,8 @@ class UserController extends BaseController
      */
     public function index()
     {
-        // $users = User::all();
-        $users = User::where('is_deleted', '!=', '1')->paginate(5);
+        $users = User::all();
+        // $users = User::where('is_deleted', '!=', '1')->paginate(5);
 
         return
             $this->sendResponse(UserResource::collection($users), 'Users retrieved successfully.');
@@ -37,6 +37,7 @@ class UserController extends BaseController
     public function show($id)
     {
         $users = User::find($id);
+        // $users = User::where('id', '$id');
 
         if (is_null($users)) {
             return $this->sendError('Users not found.');
@@ -88,20 +89,15 @@ class UserController extends BaseController
     }
 
     public function delete($id) {
+
         $user = User::find($id);
+       
 
-        $dataInput = [
-            'is_deleted' => 1,
-        ]; 
-
-        $user->update($dataInput);
-
-        if(empty($user)){
-            return $this->sendError('Validation Error : ', $validator->errors());       
+        if ($user != null) {
+            $user->delete();
+            return $this->sendResponse(new UserResource($user), 'User deleted successfully.');
         }
-
-        return $this->sendResponse(new UserResource($user), 'User deleted successfully.');
-
+        return $this->sendError('User not found ');      
 
     }
 
