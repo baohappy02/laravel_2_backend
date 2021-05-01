@@ -79,13 +79,14 @@ class UserController extends BaseController
 
         $dataRequest = $request->only('first_name', 'last_name', 'phone', 'email');
 
-        $user->update($dataRequest);
-
-        if(empty($user)){
-            return $this->sendError('Validation Error : ', $validator->errors());       
+        if($user != null){
+            
+            $user->update($dataRequest);
+            return $this->sendResponse(new UserResource($user), 'User updated successfully.');
         }
 
-        return $this->sendResponse(new UserResource($user), 'User updated successfully.');
+        return $this->sendError('User not found');       
+        
     }
 
     public function delete($id) {
