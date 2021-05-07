@@ -22,6 +22,7 @@ class RegisterController extends BaseController
             'last_name' => 'required',
             'phone' => 'required',
             'email' => 'required|email',
+            'position' => 'required',
             'password' => 'required',
             'c_password' => 'required|same:password',
         ]);
@@ -32,9 +33,11 @@ class RegisterController extends BaseController
    
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
+        $input['c_password'] = bcrypt($input['c_password']);
         $user = User::create($input);
         $success['token'] =  $user->createToken('MyApp')->accessToken;
-        $success['first_name'] =  $user->first_name;
+        $success['id'] =  $user->first_name;
+        $success['position'] =  $user->first_name;
    
         return $this->sendResponse($success, 'User register successfully.');
     }
@@ -46,15 +49,17 @@ class RegisterController extends BaseController
      */
     public function login(Request $request)
     {
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
-            $user = Auth::user(); 
+        $token = null;
+        if (!$token = Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            return $this->sendError('Invalid Email or Password.', ['error'=>'Invalid email or password']);
+        } else if ($token = Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+                  $user = Auth::user(); 
             $success['token'] =  $user->createToken('MyApp')-> accessToken; 
-            $success['first_name'] =  $user->first_name;
-   
+            $success['id'] =  $user->id;
+            $success['position'] =  $user->position;
             return $this->sendResponse($success, 'User login successfully.');
-        } 
-        else{ 
+        } else {
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
-        } 
+        }
     }
 }

@@ -22,6 +22,7 @@ class User extends JsonResource
             'email' => $this->email,
             'created_at' => $this->created_at->format('d/m/Y H:i:s'),
             'updated_at' => $this->updated_at->format('d/m/Y H:i:s'),
+            // 'is_active' => $this->is_active,
         ];
     }
 }

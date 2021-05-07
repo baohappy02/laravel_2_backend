@@ -25,8 +25,10 @@ class CreateUsersTable extends Migration
             $table->string('phone');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('position')->nullable();
             $table->string('password');
-            // $table->tinyInteger('is_deleted')->default(config('constants.false'));
+            // $table->tinyInteger('is_active')->default(config('constants.true'));
+             // $table->tinyInteger('is_deleted')->default(config('constants.false'));
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

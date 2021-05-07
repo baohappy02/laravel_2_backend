@@ -20,14 +20,36 @@ class UserController extends BaseController
     public function index()
     {
         $users = User::all();
-        // $users = User::where('is_deleted', '!=', '1')->paginate(5);
-
         return
             $this->sendResponse(UserResource::collection($users), 'Users retrieved successfully.');
-
-        // dd(UserResource::collection($users));
     }
 
+       /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function indexWithTrashed()
+    {
+        $users = User::withTrashed()->get();
+        return
+            $this->sendResponse(UserResource::collection($users), 'Users retrieved successfully.');
+    }
+
+
+       /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function indexOnlyTrashed()
+    {
+        $users = User::onlyTrashed()->get();
+        return
+            $this->sendResponse(UserResource::collection($users), 'Users retrieved successfully.');
+    }
+
+    
     /**
      * Display the specified resource.
      *
@@ -44,6 +66,27 @@ class UserController extends BaseController
         }
 
         return $this->sendResponse(new UserResource($users), 'Users retrieved successfully.');
+    }
+
+
+     /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restoreById($id)
+    {
+        // $users = User::withTrashed()->where('id', $id)->restore();
+        $users = User::withTrashed()
+        ->where('id', $id)->restore();
+        
+        // print_r($id);die;
+        if (is_null($users)) {
+            return $this->sendError('Users not found.');
+        }
+        // $user->restore();
+        return $this->sendResponse(new UserResource($users), 'User restored successfully.');
     }
 
 
@@ -73,11 +116,12 @@ class UserController extends BaseController
             return $this->sendResponse(new UserResource($user), 'User created successfully.');
     }
 
+
     public function update(Request $request, $id)
     {
         $user = User::find($id);
 
-        $dataRequest = $request->only('first_name', 'last_name', 'phone', 'email');
+        $dataRequest = $request->only('first_name', 'last_name', 'phone');
 
         if($user != null){
             
@@ -102,4 +146,15 @@ class UserController extends BaseController
 
     }
 
+    // public function delete($id) {
+    //     $user = User::find($id);
+       
+    //     if($user != null){
+    //         $user->is_active = false;
+    //         $user->save();
+    //         return $this->sendResponse(new UserResource($user), 'User deleted successfully.');
+    //     }
+
+    //     return $this->sendError('User not found');       
+    // }
 }
