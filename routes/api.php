@@ -19,12 +19,24 @@ use App\Http\Controllers\API\UserController;
 |
 */
   
-Route::post('/register', [RegisterController::class, 'register']);
-Route::post('/login', [RegisterController::class, 'login']);
+// Route::post('/register', [RegisterController::class, 'register']);
+// Route::post('/login', [RegisterController::class, 'login']);
      
-Route::middleware('auth:api')->group( function () {
-    // Route::resource('users', UserController::class);
-    Route::get('users', [UserController::class, 'index']);
+// Route::middleware('auth:api')->group( function () {
+//     // Route::resource('users', UserController::class);
+//     Route::get('users', [UserController::class, 'index']);
+
+//     Route::get('users/{id}', [UserController::class, 'show']);
+
+//     Route::post('users', [UserController::class, 'store']);
+    
+//     Route::post('users/{id}', [UserController::class, 'update']);
+
+//     Route::post('users/delete/{id}', [UserController::class, 'delete']);
+// });
+
+
+Route::get('users', [UserController::class, 'index']);
 
     Route::get('users/{id}', [UserController::class, 'show']);
 
@@ -33,4 +45,3 @@ Route::middleware('auth:api')->group( function () {
     Route::post('users/{id}', [UserController::class, 'update']);
 
     Route::post('users/delete/{id}', [UserController::class, 'delete']);
-});
