@@ -55,16 +55,30 @@ class UserController extends BaseController
      */
     public function store(Request $request)
     {
-        $dataRequire = $request->only(
-            'first_name',
-            'last_name', 
-            'phone', 
-            'email'
-        ) + [
-            'password' => Hash::make($request->input('password'))
-        ];
+        // $dataRequire = $request->only(
+        //     'first_name',
+        //     'last_name', 
+        //     'phone', 
+        //     'email'
+        // ) + [
+        //     'password' => Hash::make($request->input('password'))
+        // ];
+        
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'phone' => 'required',
+            'email' => 'required|email',
+            'position' => 'required',
+            'password' => 'required',
+            'c_password' => 'required|same:password',
+        ]);
 
-        $user = User::create($dataRequire);
+        // $user = User::create($dataRequire);
+
+        $input = $request->all();
+        $input['password'] = bcrypt($input['password']);
+        $user = User::create($input);
 
         if(!$user){
             return $this->sendError('Validation Error : ', $validator->errors());       
@@ -77,7 +91,8 @@ class UserController extends BaseController
     {
         $user = User::find($id);
 
-        $dataRequest = $request->only('first_name', 'last_name', 'phone', 'email');
+        // $dataRequest = $request->only('first_name', 'last_name', 'phone', 'email');
+        $dataRequest = $request->only('first_name', 'last_name', 'phone');
 
         if($user != null){
             
